@@ -1,0 +1,146 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Гость" as Guest
+actor "Пользователь" as User
+actor "Администратор" as Admin
+actor "Разработчик" as Developer
+actor "Шахматный движок" as ChessEngine
+
+package "Гостевой доступ" {
+    usecase "Просмотр доступных партий" as UC_G1
+    usecase "Игра против шахматного движка\n(ограниченный режим)" as UC_G2
+    usecase "Просмотр турнирных результатов\nи текущих туров" as UC_G3
+    usecase "Решение ознакомительных\nтактических задач" as UC_G4
+    usecase "Просмотр рейтингов игроков" as UC_G5
+    usecase "Ознакомление с правилами игры" as UC_G6
+}
+
+package "Пользовательский функционал" {
+    usecase "Регистрация в системе" as UC_U1
+    usecase "Авторизация в системе" as UC_U2
+    usecase "Выход из аккаунта" as UC_U3
+
+    usecase "Создание партии с другим пользователем" as UC_U4
+    usecase "Принятие вызова на партию" as UC_U5
+    usecase "Поиск автоматического соперника\nпо рейтингу" as UC_U6
+    usecase "Подключение к игровой комнате" as UC_U6_1
+
+    usecase "Добавление пользователей в друзья" as UC_U7
+    usecase "Просмотр профилей друзей\nи их игровой активности" as UC_U8
+    usecase "Отправка сообщений в чат" as UC_U9
+
+    usecase "Участие в турнире" as UC_U10
+    usecase "Создание пользовательских турниров" as UC_U11
+    usecase "Настройка параметров игры\n(временной контроль, режимы)" as UC_U12
+    usecase "Получение личной статистики\nпо различным режимам игры" as UC_U13
+    usecase "Управление сохраненными партиями" as UC_U13_1
+
+    usecase "Тренировка с шахматным движком\nс настройкой сложности" as UC_U14
+    usecase "Анализ партии с шахматным движком" as UC_U15
+    usecase "Изучение дебютов\nи редактирование доски" as UC_U16
+    usecase "Решение тактических задач\nс сохранением прогресса" as UC_U17
+}
+
+package "Администрирование системы" {
+    usecase "Блокировка учетной записи" as UC_A1
+    usecase "Удаление учетной записи" as UC_A2
+    usecase "Управление ролями пользователей" as UC_A2_1
+    usecase "Модерация сообщений в чатах" as UC_A3
+    usecase "Обработка жалоб на пользователей" as UC_A4
+    usecase "Создание системных турниров" as UC_A5
+    usecase "Удаление или корректировка\nрезультатов турнира" as UC_A6
+    usecase "Управление античит-системой" as UC_A7
+    usecase "Просмотр текущих активных партий\nдля выявления нарушений" as UC_A8
+    usecase "Статистическое наблюдение\nза системой" as UC_A9
+    usecase "Управление сложностью тактических задач" as UC_A10
+}
+
+package "Разработка и обслуживание" {
+    usecase "Добавление нового функционала" as UC_D1
+    usecase "Исправление ошибок в системе" as UC_D2
+    usecase "Мониторинг и масштабирование системы" as UC_D3
+    usecase "Интеграция с сторонними API\nи шахматными движками" as UC_D4
+    usecase "Поддержка безопасности системы" as UC_D5
+}
+
+package "Взаимодействие с шахматным движком" {
+    usecase "Выполнение ходов против ИИ" as UC_CE1
+    usecase "Создание тактических задач" as UC_CE2
+    usecase "Генерация оценки позиции" as UC_CE3
+    usecase "Подсказки или анализ ходов" as UC_CE4
+    usecase "Симуляция партий\nдля тестирования" as UC_CE5
+    usecase "Анализ игровых сценариев\nдля античит-системы" as UC_CE6
+}
+
+' Связи Гостя
+Guest --> UC_G1 : "Ассоциация"
+Guest --> UC_G2 : "Ассоциация"
+Guest --> UC_G3 : "Ассоциация"
+Guest --> UC_G4 : "Ассоциация"
+Guest --> UC_G5 : "Ассоциация"
+Guest --> UC_G6 : "Ассоциация"
+
+' Связи Пользователя
+User --> UC_U1 : "Ассоциация"
+User --> UC_U2 : "Ассоциация"
+User --> UC_U3 : "Ассоциация"
+User --> UC_U4 : "Ассоциация"
+User --> UC_U5 : "Ассоциация"
+User --> UC_U6 : "Ассоциация"
+User --> UC_U13 : <<include>>
+User --> UC_U13_1: <<include>>
+User --> UC_U7
+User --> UC_U8
+User --> UC_U9
+User --> UC_U10
+User --> UC_U11
+User --> UC_U12
+User --> UC_U14
+User --> UC_U15
+User --> UC_U16
+User --> UC_U17
+
+' include и extend Пользователя
+UC_U6 ..> UC_U6_1 : <<include>>
+UC_U15 ..> UC_U16 : <<extend>>
+
+' Связи Администратора
+Admin --> UC_A1
+Admin --> UC_A2
+Admin --> UC_A2_1 : <<include>>
+Admin --> UC_A3
+Admin --> UC_A4
+Admin --> UC_A5
+Admin --> UC_A6
+Admin --> UC_A7
+Admin --> UC_A8
+Admin --> UC_A9
+Admin --> UC_A10
+Admin --> UC_D5 : <<include>>
+
+' Связи Разработчика
+Developer --> UC_D1
+Developer --> UC_D2
+Developer --> UC_D3
+Developer --> UC_D4
+Developer --> UC_D5
+
+' Связи шахматного движка
+ChessEngine --> UC_CE1
+ChessEngine --> UC_CE2
+ChessEngine --> UC_CE3
+ChessEngine --> UC_CE4
+ChessEngine --> UC_CE5
+ChessEngine --> UC_CE6
+
+' Взаимодействие шахматного движка с функционалом
+UC_U14 ..> UC_CE1 : <<include>>
+UC_U15 ..> UC_CE4 : <<include>>
+UC_U17 ..> UC_CE2 : <<include>>
+UC_A7 ..> UC_CE6 : <<extend>>
+UC_CE5 ..> UC_D1 : <<include>>
+
+UC_G2 ..> UC_CE1 : <<include>>
+@enduml
